@@ -1,0 +1,84 @@
+server:
+  port: 8181
+  devtools:
+    restart:
+      enabled: true
+  application:
+      name: infrastructure-biz
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:8100/eureka
+feign:
+  hystrix:
+    # 在feign中开启Hystrix
+    enabled: true
+
+spring:
+  mvc:
+    servlet:
+      load-on-startup: 100
+
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      first:
+        url: jdbc:mysql://localhost:3306/sms?allowMultiQueries=true&useUnicode=true&characterEncoding=UTF-8&useSSL=false
+        username: root
+        password: 123
+        driver-class-name: com.mysql.jdbc.Driver
+        initial-size: 10
+        max-active: 100
+        min-idle: 10
+        max-wait: 60000
+        pool-prepared-statements: true
+        max-pool-prepared-statement-per-connection-size: 20
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        stat-view-servlet:
+          enabled: true
+          url-pattern: /druid/*
+          #login-username: admin
+          #login-password: admin
+          filter:
+            stat:
+              log-slow-sql: true
+              slow-sql-millis: 1000
+              merge-sql: false
+            wall:
+              config:
+                multi-statement-allow: true
+
+      second:
+        url: jdbc:postgresql://192.168.1.6:5432/cg
+        username: postgres
+        password: 123
+        driver-class-name: org.postgresql.Driver
+        stat-view-servlet:
+          enabled: true
+          url-pattern: /druid/*
+          #login-username: admin
+          #login-password: admin
+        filter:
+          stat:
+            log-slow-sql: true
+            slow-sql-millis: 1000
+            merge-sql: false
+          wall:
+            config:
+              multi-statement-allow: true
+
+
+tomcat:
+  uri-encoding: UTF-8
+  max-threads: 1000
+  min-spare-threads: 30
+  connection-timeout: 5000ms
+  servlet:
+    context-path: /
+  max-http-header-size: 81920
